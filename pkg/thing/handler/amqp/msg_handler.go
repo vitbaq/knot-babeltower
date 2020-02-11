@@ -121,6 +121,21 @@ func (mc *MsgHandler) handleRequestData(body []byte, authorization string) error
 	return nil
 }
 
+func (mc *MsgHandler) handleUpdateData(body []byte, authorization string) error {
+	var updateDataReq network.UpdateDataCommand
+	err := json.Unmarshal(body, &updateDataReq)
+	if err != nil {
+		mc.logger.Error(err)
+		return err
+	}
+
+	mc.logger.Info("Update data command received")
+	mc.logger.Debug(authorization, updateDataReq)
+	// TODO: call update data interactor
+
+	return nil
+}
+
 func (mc *MsgHandler) onMsgReceived(msgChan chan network.InMsg) {
 	for {
 		msg := <-msgChan
@@ -148,6 +163,12 @@ func (mc *MsgHandler) onMsgReceived(msgChan chan network.InMsg) {
 			}
 		case "data.request":
 			err := mc.handleRequestData(msg.Body, authorizationHeader.(string))
+			if err != nil {
+				mc.logger.Error(err)
+				continue
+			}
+		case "data.update":
+			err := mc.handleUpdateData(msg.Body, authorizationHeader.(string))
 			if err != nil {
 				mc.logger.Error(err)
 				continue

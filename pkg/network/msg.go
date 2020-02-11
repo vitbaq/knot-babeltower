@@ -42,3 +42,13 @@ type RequestDataCommand struct {
 	ID        string `json:"id"`
 	SensorIds []int  `json:"sensorIds"`
 }
+
+type UpdateDataCommand struct {
+	ID   string `json:"id"`
+	Data []Data `json:"data"`
+}
+
+type Data struct {
+	SensorID int  `json:"sensorId"`
+	Value    bool `json:"value"`
+}
