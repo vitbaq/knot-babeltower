@@ -5,6 +5,7 @@ import (
 	"github.com/CESARBR/knot-babeltower/pkg/thing/delivery/amqp"
 	"github.com/CESARBR/knot-babeltower/pkg/thing/delivery/http"
 	"github.com/CESARBR/knot-babeltower/pkg/thing/entities"
+	"github.com/CESARBR/knot-babeltower/pkg/network"
 )
 
 // Interactor is an interface that defines the thing's use cases operations
@@ -13,6 +14,7 @@ type Interactor interface {
 	UpdateSchema(authorization, id string, schemaList []entities.Schema) error
 	List(authorization string) error
 	RequestData(authorization, thingID string, sensorIds []int) error
+	UpdateData(authorization, thingID string, data []network.Data) error
 }
 
 // ThingInteractor represents the thing interactor capabilities, it's composed

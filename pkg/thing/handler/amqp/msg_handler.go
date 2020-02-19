@@ -131,7 +131,10 @@ func (mc *MsgHandler) handleUpdateData(body []byte, authorization string) error 
 
 	mc.logger.Info("Update data command received")
 	mc.logger.Debug(authorization, updateDataReq)
-	// TODO: call update data interactor
+	err = mc.thingInteractor.UpdateData(authorization, updateDataReq.ID, updateDataReq.Data)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
