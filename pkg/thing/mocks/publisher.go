@@ -37,3 +37,9 @@ func (fp *FakePublisher) SendRequestData(thingID string, sensorIds []int) error 
 	args := fp.Called(thingID, sensorIds)
 	return args.Error(0)
 }
+
+// SendRequestData provides a mock function to send a request data command
+func (fp *FakePublisher) SendUpdateData(thingID string, data []network.Data) error {
+	args := fp.Called(thingID, data)
+	return args.Error(0)
+}

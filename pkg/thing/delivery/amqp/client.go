@@ -14,6 +14,7 @@ const (
 	schemaOutKey      = "schema.updated"
 	listThingsOutKey  = "device.list"
 	requestDataOutKey = "data.request"
+	updateDataOutKey  = "data.update"
 )
 
 // msgClientPublisher handle messages received from a service
@@ -28,6 +29,7 @@ type ClientPublisher interface {
 	SendUpdatedSchema(thingID string) error
 	SendThings(things []*entities.Thing) error
 	SendRequestData(thingID string, sensorIds []int) error
+	SendUpdateData(thingID string, data []network.Data) error
 }
 
 // NewMsgClientPublisher constructs the msgClientPublisher
@@ -79,4 +81,15 @@ func (mp *msgClientPublisher) SendRequestData(thingID string, sensorIds []int) e
 	}
 
 	return mp.amqp.PublishPersistentMessage(exchangeFogOut, requestDataOutKey, msg)
+}
+
+// SendUpdateData sends update data command
+func (mp *msgClientPublisher) SendUpdateData(thingID string, data []network.Data) error {
+	resp := &network.UpdateDataCommand{ID: thingID, Data: data}
+	msg, err := json.Marshal(resp)
+	if err != nil {
+		return err
+	}
+
+	return mp.amqp.PublishPersistentMessage(exchangeFogOut, updateDataOutKey, msg)
 }
