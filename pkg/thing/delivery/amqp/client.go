@@ -85,7 +85,7 @@ func (mp *msgClientPublisher) SendRequestData(thingID string, sensorIds []int) e
 
 // SendUpdateData sends update data command
 func (mp *msgClientPublisher) SendUpdateData(thingID string, data []network.Data) error {
-	resp := &network.UpdateDataCommand{ID: thingID, Data: data}
+	resp := &network.UpdatePublishDataCommand{ID: thingID, Data: data}
 	msg, err := json.Marshal(resp)
 	if err != nil {
 		return err

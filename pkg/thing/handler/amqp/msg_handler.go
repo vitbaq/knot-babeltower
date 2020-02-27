@@ -122,7 +122,7 @@ func (mc *MsgHandler) handleRequestData(body []byte, authorization string) error
 }
 
 func (mc *MsgHandler) handleUpdateData(body []byte, authorization string) error {
-	var updateDataReq network.UpdateDataCommand
+	var updateDataReq network.UpdatePublishDataCommand
 	err := json.Unmarshal(body, &updateDataReq)
 	if err != nil {
 		mc.logger.Error(err)
@@ -135,6 +135,21 @@ func (mc *MsgHandler) handleUpdateData(body []byte, authorization string) error 
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (mc *MsgHandler) handlePublishData(body []byte, authorization string) error {
+	var publishDataReq network.UpdatePublishDataCommand
+	err := json.Unmarshal(body, &publishDataReq)
+	if err != nil {
+		mc.logger.Error(err)
+		return err
+	}
+
+	mc.logger.Info("Publish data message received")
+	mc.logger.Debug(authorization, publishDataReq)
+	//TODO: call publish data use case
 
 	return nil
 }
@@ -176,6 +191,13 @@ func (mc *MsgHandler) onMsgReceived(msgChan chan network.InMsg) {
 				mc.logger.Error(err)
 				continue
 			}
+		case "data.publish":
+			err := mc.handlePublishData(msg.Body, authorizationHeader.(string))
+			if err != nil {
+				mc.logger.Error(err)
+				continue
+			}
+			continue
 		case "schema.update":
 			err := mc.handleUpdateSchemaMsg(msg.Body, authorizationHeader.(string))
 			if err != nil {

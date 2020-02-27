@@ -43,7 +43,7 @@ type RequestDataCommand struct {
 	SensorIds []int  `json:"sensorIds"`
 }
 
-type UpdateDataCommand struct {
+type UpdatePublishDataCommand struct {
 	ID   string `json:"id"`
 	Data []Data `json:"data"`
 }
