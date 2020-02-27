@@ -12,6 +12,7 @@ const (
 	exchangeConnIn    = "connIn"
 	registerInKey     = "device.register"
 	updateSchemaInKey = "schema.update"
+	publishDataInKey  = "data.publish"
 )
 
 type msgConnectorPublisher struct {
@@ -23,6 +24,7 @@ type msgConnectorPublisher struct {
 type ConnectorPublisher interface {
 	SendRegisterDevice(string, string) error
 	SendUpdateSchema(string, []entities.Schema) error
+	SendPublishData(string, []network.Data) error
 }
 
 // NewConnector constructs the Connector
@@ -54,4 +56,16 @@ func (mp *msgConnectorPublisher) SendUpdateSchema(id string, schemaList []entiti
 		return err
 	}
 	return mp.amqp.PublishPersistentMessage(exchangeConnIn, updateSchemaInKey, bytes)
+}
+
+// SendPublishData sends a publish data message
+func (mp *msgConnectorPublisher) SendPublishData(id string, data []network.Data) error {
+	mp.logger.Info("Sending update schema message to connector")
+	msg := network.UpdatePublishDataCommand{ID: id, Data: data}
+	bytes, err := json.Marshal(msg)
+	if err != nil {
+		mp.logger.Error(err)
+		return err
+	}
+	return mp.amqp.PublishPersistentMessage(exchangeConnIn, publishDataInKey, bytes)
 }

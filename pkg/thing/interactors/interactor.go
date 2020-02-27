@@ -15,6 +15,7 @@ type Interactor interface {
 	List(authorization string) error
 	RequestData(authorization, thingID string, sensorIds []int) error
 	UpdateData(authorization, thingID string, data []network.Data) error
+	PublishData(authorization, thingID string, data []network.Data) error
 }
 
 // ThingInteractor represents the thing interactor capabilities, it's composed
